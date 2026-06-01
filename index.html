@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EscapeRoom Builder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header id="app-header">
+  <div class="logo">Escape<span>Room</span></div>
+  <div class="mode-tabs">
+    <button class="tab-btn active" id="tab-creator">🧩 Create</button>
+    <button class="tab-btn" id="tab-player">🎮 Play</button>
+  </div>
+</header>
+
+<!-- ===== CREATOR PANEL ===== -->
+<div class="panel active" id="panel-creator">
+
+  <!-- Step Indicator -->
+  <div class="steps">
+    <div class="step active cr-step" data-step="1">
+      <div class="step-num">1</div>
+      <span class="step-label">Upload CSV</span>
+      <div class="step-line"></div>
+    </div>
+    <div class="step cr-step" data-step="2">
+      <div class="step-num">2</div>
+      <span class="step-label">Configure</span>
+      <div class="step-line"></div>
+    </div>
+    <div class="step cr-step" data-step="3">
+      <div class="step-num">3</div>
+      <span class="step-label">Place Objects</span>
+      <div class="step-line"></div>
+    </div>
+    <div class="step cr-step" data-step="4">
+      <div class="step-num">4</div>
+      <span class="step-label">Preview &amp; Export</span>
+    </div>
+  </div>
+
+  <!-- Step 1: Upload -->
+  <div id="cr-upload-section">
+    <div class="card">
+      <div class="card-title">📂 Upload or Paste CSV</div>
+
+      <div class="drop-zone" id="cr-drop-zone">
+        <div class="icon">📄</div>
+        <p><strong>Drop your CSV file here</strong> or click to browse</p>
+        <p style="font-size:0.8rem;margin-top:0.25rem">Tab or comma delimited</p>
+      </div>
+      <input type="file" id="cr-file-input" accept=".csv,.tsv,.txt" class="hidden">
+
+      <div style="text-align:center;color:var(--muted);margin:1rem 0;font-size:0.85rem">— or paste CSV text below —</div>
+
+      <div class="form-group">
+        <textarea id="cr-paste-area" rows="8" placeholder="type,stage,stage_image_url,...&#10;stage,1,https://...&#10;question,1,1,What is..."></textarea>
+      </div>
+
+      <div id="cr-upload-alert" class="hidden"></div>
+
+      <div class="flex gap-1 mt-1">
+        <button class="btn btn-primary" id="cr-parse-btn">Parse CSV →</button>
+        <button class="btn btn-secondary" id="cr-template-btn">⬇ Download Template</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 CSV Format Guide</div>
+      <p class="text-muted mb-2">Your CSV needs two types of rows: <code>stage</code> rows and <code>question</code> rows.</p>
+
+      <div class="alert alert-info">
+        <div>
+          <strong>Stage rows:</strong><br>
+          <code>type, stage, stage_image_url, grid_cols, grid_rows, designator_type</code><br>
+          <code>stage, 1, https://img.url/bg.jpg, 8, 6, letters</code>
+        </div>
+      </div>
+      <div class="alert alert-info" style="margin-top:0.5rem">
+        <div>
+          <strong>Question rows:</strong><br>
+          <code>type, stage, question, question_text, question_image_url, correct_answer(1-6), a1_text, a1_image, a2_text, a2_image, …a6, object_name, object_col, object_row</code><br>
+          <code>question, 1, 1, What is the capital?, , 2, Berlin, , Paris, , Rome, , , , , , , , Eiffel Tower, 3, 2</code>
+        </div>
+      </div>
+      <p class="text-muted" style="margin-top:0.5rem">Designator types: <code>letters</code> · <code>numbers</code> · <code>emoji</code> · <code>symbols</code> · <code>roman</code> · <code>greek</code></p>
+    </div>
+  </div>
+
+  <!-- Step 2: Configure -->
+  <div id="cr-config-section" class="hidden">
+    <div class="card">
+      <div class="card-title">⚙️ Game Settings</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Game Title</label>
+          <input type="text" id="cr-game-title" placeholder="My Escape Room">
+        </div>
+        <div class="form-group">
+          <label>Background Image URL (optional)</label>
+          <input type="text" id="cr-game-bg" placeholder="https://...">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎯 Stage Configuration</div>
+      <div class="stage-tabs" id="cr-stage-tabs-config"></div>
+      <div id="cr-stage-config-body"></div>
+    </div>
+
+    <div class="flex gap-1">
+      <button class="btn btn-secondary" onclick="showCreatorStep(1)">← Back</button>
+      <button class="btn btn-primary" id="cr-to-step3">Place Objects →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Place Objects -->
+  <div id="cr-placer-section" class="hidden">
+    <div class="card">
+      <div class="card-title">📍 Place Objects on Stage Images</div>
+      <p class="text-muted mb-2">For each stage, click the grid cell where each object is located in the image. Objects must be placed in question order.</p>
+      <div class="stage-tabs" id="cr-placer-tabs"></div>
+      <div id="cr-placer-body"></div>
+    </div>
+
+    <div class="flex gap-1">
+      <button class="btn btn-secondary" onclick="showCreatorStep(2)">← Back</button>
+      <button class="btn btn-primary" id="cr-to-step4">Preview &amp; Export →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Preview & Export -->
+  <div id="cr-preview-section" class="hidden">
+    <div class="card">
+      <div class="card-title">👁 Student Preview</div>
+      <p class="text-muted mb-2">This is how students will see the game. Correct answers are highlighted for your reference only.</p>
+      <div id="cr-preview-body"></div>
+    </div>
+
+    <div class="flex gap-1">
+      <button class="btn btn-secondary" onclick="showCreatorStep(3)">← Back</button>
+      <button class="btn btn-success" id="cr-export-btn">⬇ Export Game File</button>
+    </div>
+  </div>
+
+</div><!-- /panel-creator -->
+
+
+<!-- ===== PLAYER PANEL ===== -->
+<div class="panel" id="panel-player">
+
+  <!-- Load screen -->
+  <div id="pl-load-screen">
+    <div class="card" style="max-width:520px;margin:3rem auto">
+      <div class="card-title">🎮 Load a Game</div>
+      <p class="text-muted mb-2">Select a game file (.json) provided by your teacher.</p>
+
+      <div class="form-group">
+        <label>Game File</label>
+        <input type="file" id="pl-file-input" accept=".json">
+      </div>
+
+      <div id="pl-load-alert" class="hidden"></div>
+
+      <button class="btn btn-primary w-full" id="pl-load-btn" disabled>▶ Load Game</button>
+
+      <div style="text-align:center;color:var(--muted);margin:1.25rem 0;font-size:0.85rem">— or resume a saved game —</div>
+
+      <button class="btn btn-secondary w-full" id="pl-load-saved-btn">📂 Load Saved Game</button>
+      <input type="file" id="pl-save-input" accept=".json" class="hidden">
+    </div>
+  </div>
+
+  <!-- Session key screen -->
+  <div id="pl-session-screen" class="hidden">
+    <div class="card" style="max-width:520px;margin:3rem auto;text-align:center">
+      <div class="card-title" style="justify-content:center">🗝 Your Session Key</div>
+      <h2 id="pl-game-title" style="font-size:1.5rem;font-weight:800;margin-bottom:0.25rem"></h2>
+      <p class="text-muted mb-2">This game has <span id="pl-stage-count-label">...</span></p>
+
+      <p class="text-muted" style="font-size:0.85rem">Write down your session key — you'll need it to resume!</p>
+      <div class="session-key-display" id="pl-session-key-display">----</div>
+
+      <div class="form-row" style="margin-top:0.5rem">
+        <button class="btn btn-secondary" id="pl-regen-key">🔀 New Key</button>
+        <div class="form-group" style="margin:0">
+          <input type="text" id="pl-custom-key-input" placeholder="Or enter your own 4-digit key" maxlength="4" pattern="[0-9]*" inputmode="numeric">
+        </div>
+      </div>
+
+      <button class="btn btn-gold w-full" id="pl-start-btn" style="margin-top:1rem;font-size:1rem;padding:0.85rem">
+        Start Game →
+      </button>
+    </div>
+  </div>
+
+  <!-- Questions screen -->
+  <div id="pl-questions-screen" class="hidden">
+    <div class="game-stage-header">
+      <div class="stage-label" id="pl-stage-label">Stage 1 of 3</div>
+      <div class="stage-title" id="pl-stage-name">Escape Room</div>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="pl-progress-fill" style="width:0%"></div>
+    </div>
+
+    <div id="pl-q-alert" class="hidden"></div>
+
+    <div id="pl-questions-body"></div>
+
+    <div class="flex gap-1" style="margin-top:1.5rem">
+      <button class="btn btn-secondary btn-sm" id="pl-save-btn">💾 Save Progress</button>
+      <button class="btn btn-gold" id="pl-submit-btn" style="flex:1">Check Answers →</button>
+    </div>
+  </div>
+
+  <!-- Result screen -->
+  <div id="pl-result-screen" class="hidden">
+    <div class="card" style="max-width:520px;margin:3rem auto;text-align:center">
+      <div class="card-title" style="justify-content:center">📊 Results</div>
+      <div id="pl-result-body"></div>
+      <div id="pl-result-action" style="margin-top:1rem"></div>
+    </div>
+  </div>
+
+  <!-- Decoder screen -->
+  <div id="pl-decoder-screen" class="hidden">
+    <div class="game-stage-header">
+      <div class="stage-label">Decoder</div>
+      <div class="stage-title" id="pl-decoder-stage">Stage Decoder</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔍 Find the Objects — In Order</div>
+      <p class="text-muted mb-1">Hover over the image to see grid numbers. Click each object in the order listed below.</p>
+      <div class="find-queue" id="pl-find-queue"></div>
+    </div>
+
+    <div style="text-align:center;overflow:hidden;margin-bottom:1.5rem" id="pl-decoder-img-wrap"></div>
+
+    <div class="card">
+      <div class="card-title">🔑 Passkey</div>
+      <div id="pl-passkey-input-wrap"></div>
+    </div>
+  </div>
+
+  <!-- Win screen -->
+  <div id="pl-win-screen" class="hidden">
+    <canvas id="pl-confetti" style="position:fixed;top:0;left:0;pointer-events:none;z-index:999"></canvas>
+    <div class="win-screen card" style="max-width:580px;margin:3rem auto;position:relative;z-index:1000">
+      <div class="win-title" id="pl-win-title">🏆 You Escaped!</div>
+      <p style="font-size:1.1rem;color:var(--muted);margin-bottom:0.5rem">You completed</p>
+      <p style="font-size:1.5rem;font-weight:800;margin-bottom:2rem" id="pl-win-game"></p>
+      <button class="btn btn-primary" onclick="location.reload()">Play Again</button>
+    </div>
+  </div>
+
+</div><!-- /panel-player -->
+
+
+<script src="js/engine.js"></script>
+<script src="js/creator.js"></script>
+<script src="js/player.js"></script>
+<script>
+  // Tab switching
+  const tabCreator = document.getElementById('tab-creator');
+  const tabPlayer  = document.getElementById('tab-player');
+  const panelCreator = document.getElementById('panel-creator');
+  const panelPlayer  = document.getElementById('panel-player');
+
+  tabCreator.addEventListener('click', () => {
+    tabCreator.classList.add('active');
+    tabPlayer.classList.remove('active');
+    panelCreator.classList.add('active');
+    panelPlayer.classList.remove('active');
+  });
+
+  tabPlayer.addEventListener('click', () => {
+    tabPlayer.classList.add('active');
+    tabCreator.classList.remove('active');
+    panelPlayer.classList.add('active');
+    panelCreator.classList.remove('active');
+  });
+
+  // Creator back navigation helper
+  function showCreatorStep(n) {
+    // Delegate to creator module
+    if (window._creatorShowStep) window._creatorShowStep(n);
+  }
+
+  // Init
+  document.addEventListener('DOMContentLoaded', () => {
+    // Expose step nav
+    window._creatorShowStep = function(n) {
+      const sections = [
+        document.getElementById('cr-upload-section'),
+        document.getElementById('cr-config-section'),
+        document.getElementById('cr-placer-section'),
+        document.getElementById('cr-preview-section'),
+      ];
+      sections.forEach((s, i) => s && s.classList.toggle('hidden', i + 1 !== n));
+      document.querySelectorAll('.cr-step').forEach((el, i) => {
+        el.classList.toggle('active', i + 1 === n);
+        el.classList.toggle('done', i + 1 < n);
+      });
+    };
+
+    // Update stage count label in player
+    document.getElementById('pl-stage-count').addEventListener && null;
+
+    CreatorInit();
+    PlayerInit();
+  });
+</script>
+</body>
+</html>

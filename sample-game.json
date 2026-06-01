@@ -1,0 +1,95 @@
+{
+  "title": "Science Escape Room",
+  "bg_url": "",
+  "created": "2026-06-01T00:00:00.000Z",
+  "stages": [
+    {
+      "stage": 1,
+      "stage_image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/800px-Empire_State_Building_%28aerial_view%29.jpg",
+      "grid_cols": 8,
+      "grid_rows": 6,
+      "designator_type": "letters",
+      "questions": [
+        {
+          "question_text": "What is the chemical symbol for water?",
+          "question_image_url": "",
+          "correct_answer_index": 1,
+          "answers": [
+            { "text": "CO2", "image_url": "" },
+            { "text": "H2O", "image_url": "" },
+            { "text": "NaCl", "image_url": "" },
+            { "text": "O2", "image_url": "" }
+          ],
+          "object_name": "The antenna",
+          "object_col": 4,
+          "object_row": 0
+        },
+        {
+          "question_text": "How many planets are in our solar system?",
+          "question_image_url": "",
+          "correct_answer_index": 2,
+          "answers": [
+            { "text": "7", "image_url": "" },
+            { "text": "9", "image_url": "" },
+            { "text": "8", "image_url": "" },
+            { "text": "10", "image_url": "" }
+          ],
+          "object_name": "The top floor",
+          "object_col": 4,
+          "object_row": 1
+        },
+        {
+          "question_text": "What force keeps us on the ground?",
+          "question_image_url": "",
+          "correct_answer_index": 0,
+          "answers": [
+            { "text": "Gravity", "image_url": "" },
+            { "text": "Magnetism", "image_url": "" },
+            { "text": "Friction", "image_url": "" },
+            { "text": "Inertia", "image_url": "" }
+          ],
+          "object_name": "A window row",
+          "object_col": 3,
+          "object_row": 3
+        }
+      ]
+    },
+    {
+      "stage": 2,
+      "stage_image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/280px-PNG_transparency_demonstration_1.png",
+      "grid_cols": 6,
+      "grid_rows": 5,
+      "designator_type": "numbers",
+      "questions": [
+        {
+          "question_text": "What is the powerhouse of the cell?",
+          "question_image_url": "",
+          "correct_answer_index": 0,
+          "answers": [
+            { "text": "Mitochondria", "image_url": "" },
+            { "text": "Nucleus", "image_url": "" },
+            { "text": "Ribosome", "image_url": "" },
+            { "text": "Vacuole", "image_url": "" }
+          ],
+          "object_name": "Top-left circle",
+          "object_col": 1,
+          "object_row": 1
+        },
+        {
+          "question_text": "What gas do plants absorb from the air?",
+          "question_image_url": "",
+          "correct_answer_index": 1,
+          "answers": [
+            { "text": "Oxygen", "image_url": "" },
+            { "text": "Carbon dioxide", "image_url": "" },
+            { "text": "Nitrogen", "image_url": "" },
+            { "text": "Hydrogen", "image_url": "" }
+          ],
+          "object_name": "Bottom-right circle",
+          "object_col": 4,
+          "object_row": 3
+        }
+      ]
+    }
+  ]
+}
