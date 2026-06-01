@@ -114,13 +114,19 @@ function parseCSV(text) {
     return result;
   };
 
-  const headers = parseRow(lines[0]).map(h => h.toLowerCase().replace(/\s+/g,'_'));
-  const rows = lines.slice(1).map(l => {
-    const vals = parseRow(l);
+  let headers = parseRow(lines[0]).map(h => h.toLowerCase().replace(/\s+/g,'_'));
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const vals = parseRow(lines[i]);
+    // If the first cell is literally "type", this is a section header row — re-read headers
+    if (vals[0] && vals[0].toLowerCase() === 'type') {
+      headers = vals.map(h => h.toLowerCase().replace(/\s+/g,'_'));
+      continue;
+    }
     const obj = {};
-    headers.forEach((h, i) => obj[h] = vals[i] || '');
-    return obj;
-  });
+    headers.forEach((h, j) => obj[h] = vals[j] || '');
+    rows.push(obj);
+  }
 
   const stageMap = {};
 
