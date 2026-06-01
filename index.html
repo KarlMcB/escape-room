@@ -160,14 +160,11 @@
       <div class="card-title">🎮 Load a Game</div>
       <p class="text-muted mb-2">Select a game file (.json) provided by your teacher.</p>
 
-      <div class="form-group">
-        <label>Game File</label>
-        <input type="file" id="pl-file-input" accept=".json">
-      </div>
+      <input type="file" id="pl-file-input" accept=".json" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none">
 
       <div id="pl-load-alert" class="hidden"></div>
 
-      <button class="btn btn-primary w-full" id="pl-load-btn">▶ Choose Game File</button>
+      <label for="pl-file-input" class="btn btn-primary w-full" id="pl-load-btn" style="display:block;text-align:center;cursor:pointer">▶ Choose Game File</label>
 
       <div style="text-align:center;color:var(--muted);margin:1.25rem 0;font-size:0.85rem">— or resume a saved game —</div>
 
@@ -310,9 +307,6 @@
         el.classList.toggle('done', i + 1 < n);
       });
     };
-
-    // Update stage count label in player
-    document.getElementById('pl-stage-count').addEventListener && null;
 
     CreatorInit();
     PlayerInit();

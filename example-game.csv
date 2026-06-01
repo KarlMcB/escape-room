@@ -1,0 +1,10 @@
+type,stage,stage_image_url,grid_cols,grid_rows,designator_type,background_url
+stage,1,https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Empire_State_Building_%28aerial_view%29.jpg/800px-Empire_State_Building_%28aerial_view%29.jpg,8,6,letters,
+stage,2,https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Single_apple.png/480px-Single_apple.png,6,5,numbers,
+
+type,stage,question,question_text,question_image_url,correct_answer,a1_text,a1_image,a2_text,a2_image,a3_text,a3_image,a4_text,a4_image,a5_text,a5_image,a6_text,a6_image,object_name,object_col,object_row
+question,1,1,What is the chemical symbol for water?,,2,CO2,,H2O,,NaCl,,O2,,,,,The antenna,4,0
+question,1,2,How many planets are in our solar system?,,3,7,,9,,8,,10,,,,,The top floor,4,1
+question,1,3,What force keeps us on the ground?,,1,Gravity,,Magnetism,,Friction,,Inertia,,,,,A window row,3,3
+question,2,1,What is the powerhouse of the cell?,,1,Mitochondria,,Nucleus,,Ribosome,,Vacuole,,,,,Top-left circle,1,1
+question,2,2,What gas do plants absorb from the air?,,2,Oxygen,,Carbon dioxide,,Nitrogen,,Hydrogen,,,,,Bottom-right circle,4,3
