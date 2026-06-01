@@ -35,14 +35,10 @@
     const loadBtn   = document.getElementById('pl-load-btn');
 
     fileInput.addEventListener('change', () => {
-      if (fileInput.files[0]) {
-        loadBtn.disabled = false;
-        loadBtn.textContent = '▶ Load ' + fileInput.files[0].name;
-      }
-    });
-
-    loadBtn.addEventListener('click', () => {
-      if (!fileInput.files[0]) return;
+      const file = fileInput.files[0];
+      if (!file) return;
+      loadBtn.textContent = '⏳ Loading ' + file.name + '…';
+      loadBtn.disabled = true;
       const reader = new FileReader();
       reader.onload = e => {
         try {
@@ -51,10 +47,14 @@
           showSessionScreen();
         } catch(err) {
           showPlayerAlert('pl-load-alert', 'Could not load game: ' + err.message, 'danger');
+          loadBtn.textContent = '▶ Load Game';
+          loadBtn.disabled = false;
         }
       };
-      reader.readAsText(fileInput.files[0]);
+      reader.readAsText(file);
     });
+
+    loadBtn.addEventListener('click', () => fileInput.click());
 
     document.getElementById('pl-load-saved-btn').addEventListener('click', () => {
       document.getElementById('pl-save-input').click();
