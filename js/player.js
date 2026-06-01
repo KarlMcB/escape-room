@@ -83,6 +83,14 @@
     document.getElementById('pl-game-title').textContent = game.title || 'Escape Room';
     document.getElementById('pl-stage-count-label').textContent = `${game.stages.length} stage${game.stages.length !== 1 ? 's' : ''}`;
 
+    // Apply game background
+    if (game.bg_url) {
+      document.body.style.backgroundImage = `url('${game.bg_url}')`;
+      document.body.style.backgroundSize = 'cover';
+      document.body.style.backgroundAttachment = 'fixed';
+      document.body.style.backgroundPosition = 'center';
+    }
+
     const skDisplay = document.getElementById('pl-session-key-display');
     const newKey = E.generateSessionKey();
     sessionKey = newKey;
