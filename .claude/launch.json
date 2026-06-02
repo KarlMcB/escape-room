@@ -4,8 +4,9 @@
     {
       "name": "escape-room",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-p", "4400", "."],
-      "port": 4400
+      "runtimeArgs": ["serve", "."],
+      "port": 4400,
+      "autoPort": true
     }
   ]
 }
